@@ -58,6 +58,13 @@ La Action [Release](.github/workflows/release.yml) verifica que el tag coincida
 con la versión, arma `another-faq-plugin.zip` y publica la release. Desde ese
 momento los sitios ven la actualización.
 
+## Cambios
+
+- **1.1.1**: historial de cambios en el README (prueba del actualizador).
+- **1.1.0**: actualizaciones automáticas desde las releases de GitHub, licencia
+  GPL-2.0-or-later y README.
+- **1.0**: versión inicial (preguntas frecuentes con categorías y shortcode `[faq]`).
+
 ## Licencia
 
 GPL-2.0-or-later. Ver [LICENSE](LICENSE).
