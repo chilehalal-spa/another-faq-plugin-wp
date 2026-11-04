@@ -2,9 +2,14 @@
 /**
  * Plugin Name: Another FAQ Plugin
  * Description: Plugin de Preguntas Frecuentes con CPT y shortcode [faq].
- * Version: 1.0
+ * Version: 1.1.0
  * Author: Zumito
  * Text Domain: another-faq-plugin
+ * Requires at least: 5.8
+ * Requires PHP: 7.4
+ * License: GPL-2.0-or-later
+ * License URI: https://www.gnu.org/licenses/gpl-2.0.html
+ * Update URI: https://github.com/chilehalal-spa/another-faq-plugin-wp
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -14,6 +19,10 @@ define( 'AFQ_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
 define( 'AFQ_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
 require_once AFQ_PLUGIN_PATH . 'includes/core/class-afq-loader.php';
+require_once AFQ_PLUGIN_PATH . 'includes/core/class-chilehalal-github-updater.php';
+
+// Actualizaciones desde las releases de GitHub
+Chilehalal_GitHub_Updater_V1::register( __FILE__, 'chilehalal-spa/another-faq-plugin-wp' );
 
 /**
  * Inicializa el plugin.
