@@ -1,0 +1,70 @@
+.afq-accordion {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.afq-item {
+    border-bottom: 1px solid #ddd;
+    background: #fff;
+    overflow: hidden;
+}
+
+.afq-item:first-child {
+    border-top: 1px solid #ddd;
+}
+
+.afq-question {
+    cursor: pointer;
+    list-style: none;
+    padding: 14px 18px;
+    position: relative;
+    padding-right: 40px;
+}
+
+.afq-question::-webkit-details-marker {
+    display: none;
+}
+
+/* El encabezado hereda tipografía y color del tema; solo reseteamos el margen
+   para que no pelee con el padding del summary. */
+.afq-question-text {
+    margin: 0;
+}
+
+.afq-question::after {
+    content: '+';
+    position: absolute;
+    right: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.2em;
+    font-weight: 400;
+}
+
+.afq-item[open] > .afq-question::after {
+    content: '\2212';
+}
+
+.afq-answer {
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.3s ease, opacity 0.25s ease;
+}
+
+.afq-item[open] > .afq-answer {
+    opacity: 1;
+}
+
+.afq-answer-inner {
+    padding: 0 18px 16px;
+    line-height: 1.6;
+    font-size: 1.15em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .afq-answer {
+        transition: none;
+    }
+}
