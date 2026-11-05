@@ -26,5 +26,6 @@ class AFQ_Loader {
         $shortcodes = new AFQ_Shortcodes();
         add_shortcode( 'faq', [ $shortcodes, 'render_faq' ] );
         add_action( 'wp_enqueue_scripts', [ $shortcodes, 'enqueue_frontend_assets' ] );
+        add_action( 'wp_footer', [ $shortcodes, 'print_schema' ] );
     }
 }

@@ -1,49 +1,118 @@
+/*
+ * Colores: toman los del tema si los define (--color-primary / --color-danger)
+ * y si no, el azul y rojo de ChileHalal.
+ */
+.afq-accordion,
+.afq-layout {
+    --afq-accent: var(--color-primary, #1A428A);
+    --afq-highlight: var(--color-danger, #D32F2F);
+    --afq-border: #E3E8F0;
+    --afq-soft: #F6F8FC;
+    --afq-text: #4B5565;
+}
+
 .afq-accordion {
     display: flex;
     flex-direction: column;
+    gap: 12px;
     width: 100%;
+    counter-reset: afq;
+    text-align: left;
 }
 
 .afq-item {
-    border-bottom: 1px solid #ddd;
+    counter-increment: afq;
+    border: 1px solid var(--afq-border);
+    border-radius: 12px;
     background: #fff;
     overflow: hidden;
+    transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
 }
 
-.afq-item:first-child {
-    border-top: 1px solid #ddd;
+.afq-item:hover {
+    border-color: var(--afq-accent);
+}
+
+.afq-item[open] {
+    border-color: var(--afq-accent);
+    background: var(--afq-soft);
+    box-shadow: inset 4px 0 0 var(--afq-highlight);
 }
 
 .afq-question {
     cursor: pointer;
     list-style: none;
-    padding: 14px 18px;
-    position: relative;
-    padding-right: 40px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 18px;
 }
 
 .afq-question::-webkit-details-marker {
     display: none;
 }
 
-/* El encabezado hereda tipografía y color del tema; solo reseteamos el margen
-   para que no pelee con el padding del summary. */
-.afq-question-text {
+/* Número de la pregunta: 01, 02… */
+.afq-question::before {
+    content: counter(afq, decimal-leading-zero);
+    flex-shrink: 0;
+    min-width: 22px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #9AA4B5;
+}
+
+/* Se fija tamaño, color y alineación para que no herede los de los títulos del tema */
+.afq-accordion .afq-question-text {
     margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 1.05rem;
+    font-weight: 600;
+    line-height: 1.4;
+    text-align: left;
+    text-transform: none;
+    color: var(--afq-accent);
 }
 
-.afq-question::after {
-    content: '+';
+/* Ícono circular: "+" que gira a "×" al abrir */
+.afq-icon {
+    position: relative;
+    flex-shrink: 0;
+    width: 30px;
+    height: 30px;
+    margin-left: auto;
+    border-radius: 50%;
+    background: #E8EEF8;
+    transition: transform 0.25s ease, background 0.2s ease;
+}
+
+.afq-icon::before,
+.afq-icon::after {
+    content: '';
     position: absolute;
-    right: 18px;
     top: 50%;
-    transform: translateY(-50%);
-    font-size: 1.2em;
-    font-weight: 400;
+    left: 50%;
+    width: 12px;
+    height: 2px;
+    margin: -1px 0 0 -6px;
+    border-radius: 2px;
+    background: var(--afq-accent);
+    transition: background 0.2s ease;
 }
 
-.afq-item[open] > .afq-question::after {
-    content: '\2212';
+.afq-icon::after {
+    transform: rotate(90deg);
+}
+
+.afq-item[open] .afq-icon {
+    transform: rotate(45deg);
+    background: var(--afq-accent);
+}
+
+.afq-item[open] .afq-icon::before,
+.afq-item[open] .afq-icon::after {
+    background: #fff;
 }
 
 .afq-answer {
@@ -57,14 +126,123 @@
     opacity: 1;
 }
 
+/* Alineada con el texto de la pregunta, no con el número */
 .afq-answer-inner {
-    padding: 0 18px 16px;
+    padding: 0 18px 18px 54px;
+    font-size: 0.98rem;
+    line-height: 1.65;
+    color: var(--afq-text);
+}
+
+.afq-answer-inner > :last-child {
+    margin-bottom: 0;
+}
+
+/* Dos columnas: introducción y contacto a la izquierda, preguntas a la derecha */
+.afq-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.5fr);
+    gap: 48px;
+    align-items: start;
+    text-align: left;
+}
+
+.afq-intro {
+    position: sticky;
+    top: 24px;
+}
+
+.afq-layout .afq-eyebrow {
+    margin: 0 0 8px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--afq-highlight);
+}
+
+.afq-layout .afq-title {
+    margin: 0 0 14px;
+    padding: 0;
+    border: 0;
+    font-size: 1.9rem;
+    font-weight: 700;
+    line-height: 1.2;
+    text-align: left;
+    text-transform: none;
+    color: var(--afq-accent);
+}
+
+.afq-layout .afq-text {
+    margin: 0 0 22px;
+    font-size: 1rem;
     line-height: 1.6;
-    font-size: 1.15em;
+    color: var(--afq-text);
+}
+
+.afq-contact {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 22px;
+    border-radius: 999px;
+    background: var(--afq-accent);
+    color: #fff !important;
+    font-weight: 700;
+    text-decoration: none !important;
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.afq-contact-whatsapp {
+    background: #25D366;
+}
+
+.afq-contact:hover {
+    transform: translateY(-2px);
+    color: #fff !important;
+}
+
+.afq-contact-whatsapp:hover {
+    background: #1EBE5A;
+}
+
+.afq-contact .fa-whatsapp {
+    font-size: 1.2em;
+}
+
+@media (max-width: 860px) {
+    .afq-layout {
+        grid-template-columns: 1fr;
+        gap: 28px;
+    }
+
+    .afq-intro {
+        position: static;
+    }
+}
+
+@media (max-width: 480px) {
+    .afq-question {
+        padding: 14px;
+        gap: 10px;
+    }
+
+    .afq-answer-inner {
+        padding: 0 14px 16px 46px;
+    }
+
+    .afq-accordion .afq-question-text {
+        font-size: 0.95rem;
+    }
+
+    .afq-layout .afq-title {
+        font-size: 1.5rem;
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .afq-answer {
+    .afq-answer,
+    .afq-icon {
         transition: none;
     }
 }

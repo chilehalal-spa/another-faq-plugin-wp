@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Another FAQ Plugin
  * Description: Plugin de Preguntas Frecuentes con CPT y shortcode [faq].
- * Version: 1.1.1
+ * Version: 1.2.0
  * Author: Zumito
  * Text Domain: another-faq-plugin
  * Requires at least: 5.8
