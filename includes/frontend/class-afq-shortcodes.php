@@ -33,8 +33,8 @@ class AFQ_Shortcodes {
      *
      * Con "titulo" se arma en dos columnas: a la izquierda etiqueta, título, texto y
      * botón de contacto; a la derecha las preguntas.
-     * [faq titulo="Resolvemos tus dudas" whatsapp="si" boton="Contacta con un profesional"]
-     * "whatsapp" acepta "si" (usa el número del botón flotante del tema) o un número;
+     * [faq titulo="Resolvemos sus dudas" whatsapp="si" boton="Contacte con un profesional"]
+     * "whatsapp" acepta "si" (utiliza el número del botón flotante del tema) o un número;
      * "enlace" acepta cualquier URL y tiene prioridad.
      *
      * @param array $atts Atributos del shortcode.
@@ -50,10 +50,25 @@ class AFQ_Shortcodes {
             'exclusivo' => 'si',
             'titulo'    => '',
             'etiqueta'  => 'Preguntas frecuentes',
-            'texto'     => '¿No encuentras tu respuesta? Nuestro equipo te responde directamente.',
-            'boton'     => 'Contacta con un profesional',
+            'texto'     => '¿No encuentra su respuesta? Nuestro equipo le responde directamente.',
+            'boton'     => 'Contacte con un profesional',
             'enlace'    => '',
             'whatsapp'  => '',
+            'contacto'  => 'no',
+            'contacto_etiqueta'      => 'Atención directa',
+            'contacto_titulo'        => '¿Prefiere hablar con alguien?',
+            'contacto_texto'         => 'Un especialista del área de calidad revisa su caso y le responde en horario hábil, sin intermediarios y sin costo.',
+            'telefono'               => '+56 9 2734 0113',
+            'correo'                 => 'calidad@chilehalal.com',
+            'horario_semana'         => 'Lunes a jueves',
+            'horario_horas'          => '8:00 – 17:45',
+            'horario_viernes'        => 'Viernes',
+            'horario_viernes_horas'  => '8:00 – 13:00',
+            'contacto_nota'          => 'La evaluación inicial de factibilidad es gratuita y sin compromiso.',
+            'cierre_titulo'          => '¿Su duda no está en la lista?',
+            'cierre_texto'           => 'Envíe su consulta y un especialista la responde directamente.',
+            'cierre_boton'           => 'Solicitar evaluación',
+            'cierre_enlace'          => '',
         ], $atts, 'faq' );
 
         $query_args = [
@@ -117,6 +132,7 @@ class AFQ_Shortcodes {
     private function render_two_columns( $atts, $accordion ) {
         $link = $this->contact_link( $atts );
         $is_whatsapp = false !== strpos( $link, 'wa.me/' );
+        $follow_up_link = esc_url( $atts['cierre_enlace'] );
 
         ob_start();
         ?>
@@ -135,8 +151,68 @@ class AFQ_Shortcodes {
                         <?php echo esc_html( $atts['boton'] ); ?>
                     </a>
                 <?php endif; ?>
+                <?php if ( 'si' === strtolower( trim( $atts['contacto'] ) ) ) : ?>
+                    <section class="afq-contact-card" aria-label="<?php echo esc_attr( $atts['contacto_etiqueta'] ); ?>">
+                        <div class="afq-contact-card-heading">
+                            <p class="afq-contact-card-label"><?php echo esc_html( $atts['contacto_etiqueta'] ); ?></p>
+                            <h3><?php echo esc_html( $atts['contacto_titulo'] ); ?></h3>
+                            <p><?php echo esc_html( $atts['contacto_texto'] ); ?></p>
+                        </div>
+                        <dl class="afq-contact-details">
+                            <?php
+                            $telephone = preg_replace( '/\D/', '', $atts['telefono'] );
+                            if ( $telephone ) :
+                                $telephone = '+' . $telephone;
+                            ?>
+                                <div>
+                                    <dt>Depto. Calidad – Halal</dt>
+                                    <dd><a href="<?php echo esc_url( 'tel:' . $telephone ); ?>"><?php echo esc_html( $atts['telefono'] ); ?></a></dd>
+                                </div>
+                            <?php endif; ?>
+                            <?php if ( $atts['correo'] ) :
+                                $email = sanitize_email( $atts['correo'] );
+                            ?>
+                                <?php if ( $email ) : ?>
+                                    <div>
+                                        <dt>Correo técnico</dt>
+                                        <dd><a href="<?php echo esc_url( 'mailto:' . $email ); ?>"><?php echo esc_html( $email ); ?></a></dd>
+                                    </div>
+                                <?php endif; ?>
+                            <?php endif; ?>
+                            <?php if ( $atts['horario_semana'] || $atts['horario_viernes'] ) : ?>
+                                <div>
+                                    <dt>Horario de atención</dt>
+                                    <dd>
+                                        <?php if ( $atts['horario_semana'] ) : ?>
+                                            <?php echo esc_html( $atts['horario_semana'] ); ?> <strong><?php echo esc_html( $atts['horario_horas'] ); ?></strong><br>
+                                        <?php endif; ?>
+                                        <?php if ( $atts['horario_viernes'] ) : ?>
+                                            <?php echo esc_html( $atts['horario_viernes'] ); ?> <strong><?php echo esc_html( $atts['horario_viernes_horas'] ); ?></strong>
+                                        <?php endif; ?>
+                                    </dd>
+                                </div>
+                            <?php endif; ?>
+                        </dl>
+                        <?php if ( $atts['contacto_nota'] ) : ?>
+                            <p class="afq-contact-note"><?php echo esc_html( $atts['contacto_nota'] ); ?></p>
+                        <?php endif; ?>
+                    </section>
+                <?php endif; ?>
             </div>
-            <?php echo $accordion; ?>
+            <div class="afq-content">
+                <?php echo $accordion; ?>
+                <?php if ( $follow_up_link && $atts['cierre_boton'] ) : ?>
+                    <aside class="afq-follow-up">
+                        <p>
+                            <strong><?php echo esc_html( $atts['cierre_titulo'] ); ?></strong>
+                            <?php echo esc_html( $atts['cierre_texto'] ); ?>
+                        </p>
+                        <a href="<?php echo $follow_up_link; ?>">
+                            <?php echo esc_html( $atts['cierre_boton'] ); ?>
+                        </a>
+                    </aside>
+                <?php endif; ?>
+            </div>
         </div>
         <?php
         return ob_get_clean();
